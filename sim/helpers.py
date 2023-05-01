@@ -37,5 +37,5 @@ def loadeq(fn):
         sympy equation
     """
     with open(fn, 'r') as f:
-        eq = f.read(eq)
+        eq = f.read()
     return sympify(eq)
