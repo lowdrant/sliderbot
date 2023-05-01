@@ -1,3 +1,16 @@
+.vscode/
+*.txt
+*.tsv
+*.jpg
+*.png
+*.gif
+*.csv
+*.npy
+*.npz
+
+# ======================================================
+# Python gitignore
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
