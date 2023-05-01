@@ -23,7 +23,6 @@ def get_dynam(g, r, L, mp, mc, eq=None, printlog=True, ret_sym=False):
     OUTPUTS:
         Callable
         Callable, symbolic equation if ret_sym==True
-
     """
     consts_dict = {'g': g, 'r': r, 'L': L, 'mp': mp, 'mc': mc}
     syms = symbols('phi theta x phidot thetadot xdot u')
@@ -75,7 +74,6 @@ def solve_dynam(ret_mats=False):
     y2 = r * cos(phi) + L * sin(phi - theta)
     p = Matrix([x1, y1, x2, y2])
     J = p.diff(q.T).reshape(N, M).tomatrix().T
-    v = J * qdot
 
     # Energy
     KEc = mc * x.diff(t)**2 / 2
