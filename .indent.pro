@@ -1,0 +1,4 @@
+-nut -i4 -slc -ce -br -brs -brf -npsl -nbc -l79 -bap -sob -nbbo
+-sai -saw -saf -npcs -ncs -ce -par
+-T uint32_t -T uint16_t -T uint8_t -T pktbuf_t -T bridge_t -T int64_t
+-ts2 -cd0 -c0 -sc -fcas -ntac
