@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from numpy import arange, asarray, zeros_like
 from scipy.integrate import odeint
 
-from eqmech import get_dynam
+from eqmech import get_dynam, solve_dynam
 from helpers import *
 from motor import Motor
 
@@ -91,8 +91,9 @@ if __name__ == '__main__':
     try:
         fun
     except NameError:
+        sym, mats = solve_dynam(ret_mats=1)
         fun, sym = get_dynam(args.g, args.r, args.L, args.mp,
-                             args.mc, eq=args.fn, ret_sym=1)
+                             args.mc, eq=sym, ret_sym=1)
 
     mtr = Motor(1, 1, 1)
 

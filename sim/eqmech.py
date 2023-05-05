@@ -40,6 +40,24 @@ def get_dynam(g, r, L, mp, mc, eq=None, printlog=True, ret_sym=False):
     return fun
 
 
+def ke2D(ke, qdot):
+    """compute inertia matrix given ke and q
+    ke -- scalar symbolic of kinetic energy
+    q -- list of symbols representing state derivatives
+    """
+    N = len(q)
+    D = zeros(N, N)
+    for n in range(N):
+        for m in range(n, N):
+            var1, var2 = qdot[n], qdot[m]
+            if n == m:
+                D[n, m] = KE.coeff(var1 * var2)
+            else:
+                D[n, m] = KE.coeff(var1 * var2) / 2
+    assert expand(qdot.T * D * qdot)[0] == expand(KE), 'inertia matrix error'
+    return D
+
+
 def solve_dynam(ret_mats=False):
     """Solve for sliderbot mechanical dynamics
     INPUTS:
