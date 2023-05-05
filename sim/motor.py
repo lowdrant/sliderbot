@@ -21,7 +21,7 @@ class Motor:
     def __init__(self, L, R, k):
         self.L, self.R, self.k = L, R, k
 
-    def __call__(self, w, I, V):
+    def __call__(self, I, V, w):
         E = self.k * w
         Idot = (V - (self.R * I + E)) / self.L
         return Idot
@@ -33,3 +33,7 @@ class Motor:
     def emf(self, w):
         """shaft speed to internal EMF"""
         return self.k * w
+
+    def v2i_ss(self, V):
+        """steady-state current calculation"""
+        return V / self.R

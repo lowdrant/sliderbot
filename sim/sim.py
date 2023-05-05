@@ -9,6 +9,7 @@ from scipy.integrate import odeint
 
 from eqmech import get_dynam
 from helpers import *
+from motor import Motor
 
 N = 3
 
@@ -65,30 +66,48 @@ def create_parser():
                         help='pendulum bob mass, default:1')
     parser.add_argument('--mc', type=float, default=1,
                         help='cart mass, default:1')
-    parser.add_argument('--tf', type=float, default=10,
-                        help='simulation runtime, default:10')
+    parser.add_argument('--tf', type=float, default=1,
+                        help='simulation runtime, default:1')
     parser.add_argument('--dt', type=float, default=0.01,
                         help='simulation timestep, default:0.01')
     parser.add_argument('--x0', type=str, default='0.1,0,0,0,0,0',
                         help='init cond CSV: phi,theta,x, phidot,thetadot,xdot, default:0.1,0,0,0,0,0')
     parser.add_argument('--fn', type=str, default=None,
                         help='filename of sliderbot ODE rawtext, default:None')
+    parser.add_argument('--mtr', action='store_true',
+                        help='use simple motor model')
+    parser.add_argument('--full-mtr', action='store_true',
+                        help='dynamic motor model')
     return parser
 
 
 if __name__ == '__main__':
     parser = create_parser()
     args = parser.parse_args()
+    if args.full_mtr:
+        raise NotImplementedError('Full motor model not implemented')
     t = arange(0, args.tf, args.dt)
     x0 = [float(v) for v in args.x0.replace(' ', '').split(',')]
-    fun, sym = get_dynam(args.g, args.r, args.L, args.mp,
-                         args.mc, eq=args.fn, ret_sym=1)
+    try:
+        fun
+    except NameError:
+        fun, sym = get_dynam(args.g, args.r, args.L, args.mp,
+                             args.mc, eq=args.fn, ret_sym=1)
+
+    mtr = Motor(1, 1, 1)
+
+    def mtrsimple(t, x, v=0):
+        """simple motor model"""
+        i = mtr.v2i_ss(v)
+        return mtr.torque(i)
 
     def f(t, x, u=0):
         """dynamics callable"""
         x = asarray(x)
         xdot = zeros_like(x)
         xdot[:N] = x[N:]
+        if args.mtr:
+            u = mtrsimple(t, x, u)
         xdot[N:] = fun(*x, u).squeeze()
         return xdot
 
@@ -99,5 +118,5 @@ if __name__ == '__main__':
         u = 10 * err + errdot
         return f(t, x, u)
 
-    y = odeint(f, x0, t, tfirst=1, args=(0.0,))
+    y = odeint(ctl, x0, t, tfirst=1, args=(0.0,))
     myplot(t, y, args.r, args.L)
