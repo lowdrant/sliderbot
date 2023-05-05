@@ -52,26 +52,32 @@ def myplot(t, y, r, L):
     ipychk()
 
 
-parser = ArgumentParser('sliderbot simulator')
-parser.add_argument('--g', type=float, default=10,
-                    help='gravitational accel, default:10')
-parser.add_argument('--r', type=float, default=1,
-                    help='reaction wheel radius, default:1')
-parser.add_argument('--L', type=float, default=0.1,
-                    help='pendulum length, default:0.1')
-parser.add_argument('--mp', type=float, default=1,
-                    help='pendulum bob mass, default:1')
-parser.add_argument('--mc', type=float, default=1, help='cart mass, default:1')
-parser.add_argument('--tf', type=float, default=10,
-                    help='simulation runtime, default:10')
-parser.add_argument('--dt', type=float, default=0.01,
-                    help='simulation timestep, default:0.01')
-parser.add_argument('--x0', type=str, default='0.1,0,0,0,0,0',
-                    help='init cond CSV: phi,theta,x, phidot,thetadot,xdot, default:0.1,0,0,0,0,0')
-parser.add_argument('--fn', type=str, default=None,
-                    help='filename of sliderbot ODE rawtext, default:None')
+def create_parser():
+    """functionalized for code folding"""
+    parser = ArgumentParser('sliderbot simulator')
+    parser.add_argument('--g', type=float, default=10,
+                        help='gravitational accel, default:10')
+    parser.add_argument('--r', type=float, default=1,
+                        help='reaction wheel radius, default:1')
+    parser.add_argument('--L', type=float, default=0.1,
+                        help='pendulum length, default:0.1')
+    parser.add_argument('--mp', type=float, default=1,
+                        help='pendulum bob mass, default:1')
+    parser.add_argument('--mc', type=float, default=1,
+                        help='cart mass, default:1')
+    parser.add_argument('--tf', type=float, default=10,
+                        help='simulation runtime, default:10')
+    parser.add_argument('--dt', type=float, default=0.01,
+                        help='simulation timestep, default:0.01')
+    parser.add_argument('--x0', type=str, default='0.1,0,0,0,0,0',
+                        help='init cond CSV: phi,theta,x, phidot,thetadot,xdot, default:0.1,0,0,0,0,0')
+    parser.add_argument('--fn', type=str, default=None,
+                        help='filename of sliderbot ODE rawtext, default:None')
+    return parser
+
 
 if __name__ == '__main__':
+    parser = create_parser()
     args = parser.parse_args()
     t = arange(0, args.tf, args.dt)
     x0 = [float(v) for v in args.x0.replace(' ', '').split(',')]
